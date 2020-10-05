@@ -3,17 +3,21 @@ import styled from "styled-components";
 import { AppBar, Toolbar, IconButton, Popover } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import HomeIcon from "@material-ui/icons/Home";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Close from "@material-ui/icons/Close";
 import { useHistory } from "react-router-dom";
 import PopupState, { bindTrigger, bindPopover } from "material-ui-popup-state";
-import {Notifications} from "./Notifications"
+import { Notifications } from "./Notifications";
 export const Navbar = () => {
   const [openNot, setOpenNot] = useState(false);
   const history = useHistory();
 
   const toProfile = () => {
     history.push("/profile");
+  };
+  const toHome = () => {
+    history.push("/");
   };
   const toggleNotifications = () => {
     setOpenNot(!openNot);
@@ -24,6 +28,14 @@ export const Navbar = () => {
         <Toolbar>
           <HeaderContent>
             <RightItems>
+              <IconButton
+                onClick={toHome}
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+              >
+                <HomeIcon />
+              </IconButton>
               <IconButton edge="start" color="inherit" aria-label="menu">
                 <MenuIcon />
               </IconButton>
@@ -50,7 +62,7 @@ export const Navbar = () => {
                         horizontal: "center",
                       }}
                     >
-                      <Notifications/>
+                      <Notifications />
                     </Popover>
                   </>
                 )}
