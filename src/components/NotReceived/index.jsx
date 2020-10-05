@@ -2,7 +2,6 @@ import React, { memo, useContext, useState } from "react";
 import { Button, TextField } from "@material-ui/core";
 import { Test } from "../styled";
 import { FunctionsContext } from "../context/FunctionsContext";
-import "react-dadata/dist/react-dadata.css";
 
 const NotReceived = memo(() => {
   const [name, setName] = useState("");

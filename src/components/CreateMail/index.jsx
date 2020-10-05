@@ -18,15 +18,13 @@ const CreateMail = memo(() => {
   const [recadr, setRecadr] = useState("");
   const [count, setCount] = useState(1);
 
-  const { worldSkills, account } = useContext(FunctionsContext);
+  const { worldSkills, account, updateMails } = useContext(FunctionsContext);
   const createMail = async () => {
     let dateNow = moment().format("DDMMYYYY");
-    console.log(dateNow);
     const startIndex = sendadr.data.postal_code;
     const endIndex = recadr.data.postal_code;
 
     const trek = `RR${dateNow}${count}${startIndex}${endIndex}`;
-    console.log(trek);
     await worldSkills.methods
       .CreateMail(
         trek,
@@ -43,6 +41,7 @@ const CreateMail = memo(() => {
       )
       .send({ from: account });
     setCount(count + 1);
+    updateMails();
   };
 
   return (
@@ -61,13 +60,15 @@ const CreateMail = memo(() => {
           variant="outlined"
           size="small"
           onChange={(e) => setReceiver(e.target.value)}
-        /><TextField
+        />
+        <TextField
           label="startpostindex"
           id="outlined-size-small"
           variant="outlined"
           size="small"
           onChange={(e) => setStartpostindex(e.target.value)}
-        /><TextField
+        />
+        <TextField
           label="endpostindex"
           id="outlined-size-small"
           variant="outlined"

@@ -2,14 +2,12 @@ import React, { memo, useContext, useState } from "react";
 import { Button, TextField } from "@material-ui/core";
 import { Test } from "../styled";
 import { FunctionsContext } from "../context/FunctionsContext";
-import "react-dadata/dist/react-dadata.css";
 import ReactDadataBox from "react-dadata-box";
 
 const AddAdmin = memo(() => {
   const [homeAddress, setHomeAddress] = useState("");
   const [name, setName] = useState("");
   const [wallet, setWallet] = useState("");
-  console.log(homeAddress.value);
   const { worldSkills, account } = useContext(FunctionsContext);
   const addAdmin = async () => {
     await worldSkills.methods

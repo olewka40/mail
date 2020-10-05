@@ -39,7 +39,6 @@ contract WorldSkills {
         uint fullcost;// Итого
         string sendadr;// Физический адрес отправителя
         string recadr;//Физический адрес получателя
-
         uint finishweight;
         bool paid; //статус оплаты
         bool delivered;//Статус доставки
@@ -77,10 +76,13 @@ contract WorldSkills {
     mapping (string => uint) MailDestination; //Куда идет посылка
     mapping (string => uint) TrekToId;
     mapping (uint => uint) TransferLifeTime;
+    mapping (uint => Mail[]) Mails;
     mapping (string => address payable) AddressToPay;
     mapping (uint => address payable) MailIndexToAddress;
     constructor () public {
-        admins.push(Admin(msg.sender, "Александр", "Никитина 85", "Главный админ", true));
+        mails.push(Mail("22", 0x0000000000000000000000000000000000000000, 0x0000000000000000000000000000000000000000, "22", 22, 22, 2, 2, 2,2, "2", "2",0,false,false,false,false,false));
+
+    admins.push(Admin(msg.sender, "Александр", "Никитина 85", "Главный админ", true));
         places.push(Place("Ростов-на-Дону", 344000,0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db));RoleCheck[0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db] = 4;MailIndexToAddress[344000] = 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db;
         places.push(Place("Таганрог(главное отделение)", 347900,0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB));RoleCheck[0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB] = 4;MailIndexToAddress[347900] = 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB;
         places.push(Place("Таганрог (Почтамт №1)", 347935,0x617F2E2fD72FD9D5503197092aC168c91465E7f2));RoleCheck[0x617F2E2fD72FD9D5503197092aC168c91465E7f2] = 4;MailIndexToAddress[347935] =0x617F2E2fD72FD9D5503197092aC168c91465E7f2;
@@ -112,25 +114,28 @@ contract WorldSkills {
         users.push(User(msg.sender, name, homeadr, "Пользователь"));
         RoleCheck[msg.sender] = 3;
     }
+    function getMail1(uint id) public view returns(string memory,address, address, string memory, uint, uint, uint) {
+        return(mails[id].trek,mails[id].mailsender, mails[id].mailreceiver, mails[id].mailtype,mails[id].class, mails[id].time, mails[id].deliverycost);
+    }
+    function getMail2(uint id) public view returns(uint,uint, uint, string memory, string memory, bool, bool ) {
+        return(mails[id].weight,mails[id].decvalue, mails[id].fullcost, mails[id].sendadr, mails[id].recadr,mails[id].paid, mails[id].delivered);
+    }
+    function getMail3(uint id) public view returns(uint,bool,bool,bool) {
+        return(mails[id].finishweight,mails[id].finished,mails[id].weightdiff,mails[id].DeliveredLate);
+    }
     function CreateMail(string memory trek, address payable sender, address payable receiver, uint startpostindex, uint endpostindex, string memory mailtype, uint class,//postindex присылает интерфейс
         uint weight, uint decvalue, string memory sendadr, string memory recadr) public {
         MailCount++;//Тут сказать олегу
         globalMailCount++;
-        // require (RoleCheck[msg.sender] == 2, "Вы не являетесь работником");
-        // require (weight > 0);
-        // require (weight < 10);
+        require (RoleCheck[msg.sender] == 2, "Вы не являетесь работником");
+        require (weight > 0);
+        require (weight < 10);
         mails.push(Mail(trek, sender, receiver, mailtype, class, (class * 5) + 5, 7 - (2*class), weight, decvalue, ((7 - (2*class))*weight) + (decvalue * 2), sendadr, recadr,0,false,false,false,false,false));// делим на 10
         TrekToId[trek] = mails.length-1;
         AddressToPay[trek] = MailIndexToAddress[startpostindex];
         MailDestination[trek] = endpostindex;
         TimeToDeliver[trek] = now + ((class * 5) + 5) * 86400;
     }
-
-
-    function getUser(uint index) public view returns(uint, uint) {
-        return (mails[index].class, mails[index].time);
-    }
-
     function payForMail(string memory trek) public payable {
         require(mails[TrekToId[trek]].mailsender == msg.sender);
         require(msg.value == (mails[TrekToId[trek]].fullcost)/10);
@@ -210,4 +215,3 @@ contract WorldSkills {
         transfers[transfer_id].sender.transfer(transfers[transfer_id].sum);
     }
 }
-

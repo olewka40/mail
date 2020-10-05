@@ -3,7 +3,6 @@ import { Button, TextField } from "@material-ui/core";
 import { FunctionsContext } from "../context/FunctionsContext";
 import { v4 } from "uuid";
 import { Test } from "../styled";
-import "react-dadata/dist/react-dadata.css";
 import ReactDadataBox from "react-dadata-box";
 
 const AddWorker = memo(() => {

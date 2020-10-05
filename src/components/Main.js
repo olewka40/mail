@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { Tabs, Tab } from "@material-ui/core";
 import AddAdmin from "./AddAdmin";
@@ -10,9 +10,11 @@ import UserNotification from "./UserNotification";
 import NotReceived from "./NotReceived";
 import styled from "styled-components";
 import ListOfMails from "./ListOfMails";
+import { FunctionsContext } from "./context/FunctionsContext";
 
 const Main = memo(() => {
   const [value, setValue] = useState(0);
+  const { mails } = useContext(FunctionsContext);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -20,7 +22,12 @@ const Main = memo(() => {
 
   return (
     <Container>
-      <Tabs value={value} onChange={handleChange} variant="fullWidth">
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        indicatorColor="primary"
+        textColor="primary"
+      >
         <Tab label="AddAdmin" />
         <Tab label="AddWorker" />
         <Tab label="UserRegister" />
@@ -52,7 +59,7 @@ const Main = memo(() => {
         <NotReceived />
       </TabPanel>
       <TabPanel value={value} index={7}>
-        <ListOfMails />
+        <ListOfMails mails={mails} />
       </TabPanel>
     </Container>
   );

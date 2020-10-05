@@ -1,25 +1,80 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { FunctionsContext } from "./context/FunctionsContext";
+import { AppBar, Toolbar, IconButton, Popover } from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import Close from "@material-ui/icons/Close";
+import { useHistory } from "react-router-dom";
+import PopupState, { bindTrigger, bindPopover } from "material-ui-popup-state";
+import {Notifications} from "./Notifications"
 export const Navbar = () => {
-  const { account } = useContext(FunctionsContext);
+  const [openNot, setOpenNot] = useState(false);
+  const history = useHistory();
+
+  const toProfile = () => {
+    history.push("/profile");
+  };
+  const toggleNotifications = () => {
+    setOpenNot(!openNot);
+  };
   return (
     <StyledHeader>
-      <Text>Current Eth wallet: {account}</Text>
+      <AppBar position="static">
+        <Toolbar>
+          <HeaderContent>
+            <RightItems>
+              <IconButton edge="start" color="inherit" aria-label="menu">
+                <MenuIcon />
+              </IconButton>
+            </RightItems>
+            <LeftItems>
+              <PopupState variant="popover" popupId="demo-popup-popover">
+                {(popupState) => (
+                  <>
+                    <IconButton
+                      onClick={toggleNotifications}
+                      {...bindTrigger(popupState)}
+                      color="inherit"
+                    >
+                      <NotificationsIcon />
+                    </IconButton>
+                    <Popover
+                      {...bindPopover(popupState)}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                      }}
+                    >
+                      <Notifications/>
+                    </Popover>
+                  </>
+                )}
+              </PopupState>
+              <IconButton onClick={toProfile} color="inherit">
+                <AccountCircleIcon />
+              </IconButton>
+            </LeftItems>
+          </HeaderContent>
+        </Toolbar>
+      </AppBar>
     </StyledHeader>
   );
 };
 
 const StyledHeader = styled.div`
   width: 100%;
-  background-color: #9fcdff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `;
-const Text = styled.div`
-  color: black;
-  font-size: 16px;
-  margin: 10px;
+const RightItems = styled.div``;
+const LeftItems = styled.div``;
+const HeaderContent = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 `;
