@@ -1,22 +1,24 @@
-require('babel-register');
-require('babel-polyfill');
+require("babel-register");
+require("babel-polyfill");
 
 module.exports = {
   networks: {
     development: {
-      host: "127.0.0.1",
-      port: 7545,
-      network_id: 5777 // Match any network id
+      host: "localhost",
+      port: 8545,
+      network_id: 5777,
+      gas: 6721975,
+      from: "0xa11e0a833eef7cd3ffa20f132c92bc84f6b2add2",
     },
   },
-  contracts_directory: './src/contracts/',
-  contracts_build_directory: './src/abis/',
+  contracts_directory: "./src/contracts/",
+  contracts_build_directory: "./src/abis/",
   compilers: {
     solc: {
       optimizer: {
         enabled: true,
-        runs: 200
-      }
-    }
-  }
-}
+        runs: 200,
+      },
+    },
+  },
+};

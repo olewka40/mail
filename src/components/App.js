@@ -34,6 +34,14 @@ const theme = createMuiTheme({
 });
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      account: "",
+      mails: [],
+    };
+  }
+
   async componentWillMount() {
     await this.loadWeb3();
     await this.loadBlockchainData();
@@ -61,16 +69,14 @@ class App extends Component {
 
     const networkId = await web3.eth.net.getId();
     const networkData = WorldSkills.networks[networkId];
-
+    console.log(networkData);
     if (networkData) {
       const worldSkills = new web3.eth.Contract(
         WorldSkills.abi,
         networkData.address
       );
-      this.setState({ worldSkills });
       const mailCount = await worldSkills.methods.globalMailCount().call();
-
-      this.setState({ mailCount });
+      this.setState({ mailCount, worldSkills });
 
       for (let i = 0; i <= mailCount; i++) {
         const data1 = await worldSkills.methods.getMail1(i).call();
@@ -104,16 +110,8 @@ class App extends Component {
         });
       }
     } else {
-      window.alert("Marketplace contract not deployed to detected network.");
+      window.alert("WSR contract not deployed to detected network.");
     }
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      account: "",
-      mails: [],
-    };
   }
 
   render() {
@@ -155,7 +153,7 @@ class App extends Component {
         });
       }
     };
-    const { products, worldSkills, mails, account } = this.state;
+    const { worldSkills, mailCount, mails, account } = this.state;
     return (
       <Router>
         <ThemeProvider theme={theme}>
@@ -163,13 +161,14 @@ class App extends Component {
             value={{
               updateMails,
               mails,
-              products,
               worldSkills,
               account,
             }}
           >
             <GlobalStyle />
             <Navbar />
+            {account}
+            {mailCount}
             <Switch>
               <Route path="/profile">
                 <Profile />
@@ -178,6 +177,7 @@ class App extends Component {
                 <Main />
               </Route>
             </Switch>
+            {/*<Search />*/}
           </FunctionsContext.Provider>
         </ThemeProvider>
       </Router>

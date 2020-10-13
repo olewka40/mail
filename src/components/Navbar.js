@@ -5,10 +5,11 @@ import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import HomeIcon from "@material-ui/icons/Home";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import Close from "@material-ui/icons/Close";
 import { useHistory } from "react-router-dom";
 import PopupState, { bindTrigger, bindPopover } from "material-ui-popup-state";
 import { Notifications } from "./Notifications";
+
+
 export const Navbar = () => {
   const [openNot, setOpenNot] = useState(false);
   const history = useHistory();

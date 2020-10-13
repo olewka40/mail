@@ -204,6 +204,7 @@ contract WorldSkills {
     }
     function createTransfer(address payable receiver, uint time) public payable {
         transfers.push(Transfer(msg.sender, receiver, msg.value, time));
+        transfers.push(Transfer(msg.sender, receiver, msg.value, time));
         TransferLifeTime[transfers.length-1] = now + time * 86400;
     }
     function acceptTransfer(uint transfer_id) public payable {
